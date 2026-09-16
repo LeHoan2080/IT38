@@ -1,0 +1,10 @@
+bin/
+obj/
+copilot/
+.vs/
+*.user
+*.suo
+.DS_Store
+
+# Local configuration and secrets
+appsettings.Development.json

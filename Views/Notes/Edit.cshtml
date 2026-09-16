@@ -1,0 +1,105 @@
+@model AspNetMvcDemo.Models.NoteEditViewModel
+
+@{
+    ViewData["Title"] = Model.CanEdit
+        ? "Chỉnh sửa ghi chú"
+        : "Xem ghi chú";
+}
+
+<div class="notes-form-page">
+    <div class="notes-form-card">
+        <div class="notes-form-header">
+            <h1>
+                @(Model.CanEdit
+                    ? "Chỉnh sửa ghi chú"
+                    : "Xem ghi chú")
+            </h1>
+        </div>
+
+        @if (Model.CanEdit)
+        {
+            <form asp-controller="Notes"
+                  asp-action="Edit"
+                  asp-route-id="@Model.Id"
+                  asp-route-fromShared="@Model.FromShared"
+                  method="post">
+
+                <input asp-for="Id" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="auth-summary"></div>
+
+                <div class="auth-field">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title"
+                           class="form-control"
+                           maxlength="200"
+                           autofocus />
+                    <span asp-validation-for="Title"
+                          class="auth-validation"></span>
+                </div>
+
+                <div class="auth-field">
+                    <label asp-for="Content"></label>
+                    <textarea asp-for="Content"
+                              class="form-control note-content-input"
+                              rows="8"></textarea>
+                    <span asp-validation-for="Content"
+                          class="auth-validation"></span>
+                </div>
+
+                <div class="notes-form-actions">
+                    @if (Model.FromShared)
+                    {
+                        <a asp-controller="Notes"
+                           asp-action="SharedWithMe"
+                           class="notes-cancel-button">
+                            Hủy
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Notes"
+                           asp-action="Index"
+                           class="notes-cancel-button">
+                            Hủy
+                        </a>
+                    }
+
+                    <button type="submit"
+                            class="auth-button">
+                        Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="auth-field">
+                <label>Tiêu đề</label>
+                <input value="@Model.Title"
+                       class="form-control"
+                       readonly />
+            </div>
+
+            <div class="auth-field">
+                <label>Nội dung</label>
+                <textarea class="form-control note-content-input"
+                          rows="8"
+                          readonly>@Model.Content</textarea>
+            </div>
+
+            <div class="notes-form-actions">
+                <a asp-controller="Notes"
+                   asp-action="SharedWithMe"
+                   class="notes-cancel-button">
+                    Hủy
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

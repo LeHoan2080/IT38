@@ -1,0 +1,56 @@
+@model AspNetMvcDemo.Models.ShareNoteViewModel
+
+@{
+    ViewData["Title"] = "Chia sẻ ghi chú";
+}
+
+<div class="notes-form-page">
+    <div class="notes-form-card">
+        <div class="notes-form-header">
+            <h1>Chia sẻ ghi chú</h1>
+        </div>
+
+        <form asp-controller="Notes"
+              asp-action="Share"
+              method="post">
+
+            <input asp-for="NoteId" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="auth-summary"></div>
+
+            <div class="auth-field">
+                <label asp-for="Email"></label>
+                <input asp-for="Email"
+                       class="form-control"
+                       autocomplete="email" />
+                <span asp-validation-for="Email"
+                      class="auth-validation"></span>
+            </div>
+
+            <div class="auth-checkbox">
+                <input asp-for="CanEdit" />
+                <label asp-for="CanEdit">
+                    Cho phép người này chỉnh sửa
+                </label>
+            </div>
+
+            <div class="notes-form-actions">
+                <a asp-controller="Notes"
+                   asp-action="Index"
+                   class="notes-cancel-button">
+                    Hủy
+                </a>
+
+                <button type="submit"
+                        class="auth-button">
+                    Chia sẻ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<section class="home-page">
+    <div class="home-hero">
+        <div class="home-logo-panel">
+            <img src="~/images/logo20HOU20new-bold.png"
+                 alt="Logo"
+                 class="school-logo" />
+        </div>
+
+        <div class="home-hero-content">
+            <h1>Ứng dụng quản lý ghi chú bảo mật cho người dùng</h1>
+
+            <p>
+                Ứng dụng quản lý ghi chú cá nhân, tìm kiếm nội dung và chia sẻ.
+            </p>
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="home-actions">
+                    <a class="home-button home-button-primary"
+                       asp-controller="Notes"
+                       asp-action="Index">
+                        Ghi chú của tôi
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="home-actions">
+                    <a class="home-button home-button-primary"
+                    asp-controller="Account"
+                    asp-action="Register">
+                        Tạo tài khoản
+                    </a>
+
+                    <a class="home-button home-button-secondary"
+                    asp-controller="Account"
+                    asp-action="Login">
+                        Đăng nhập
+                    </a>
+                </div>
+            }
+
+            
+        </div>
+    </div>
+</section>

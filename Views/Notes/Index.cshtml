@@ -1,0 +1,80 @@
+@model IEnumerable<AspNetMvcDemo.Models.Note>
+
+@{
+    ViewData["Title"] = "Ghi chú của tôi";
+}
+
+<div class="notes-page">
+    <div class="notes-header">
+        <div>
+            <h1>Ghi chú của tôi</h1>
+        </div>
+
+        <a class="notes-button"
+           asp-controller="Notes"
+           asp-action="Create">
+            Tạo ghi chú
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="notes-empty">
+            <p>Chưa có ghi chú nào</p>
+        </div>
+    }
+    else
+    {
+        <div class="notes-list">
+            @foreach (var note in Model)
+            {
+                <article class="note-item">
+                    <div class="note-content">
+                        <h2>@note.Title</h2>
+
+                        <p>@note.Content</p>
+                    </div>
+
+                    <time class="note-time"
+                        datetime="@note.CreatedAt.ToString("O")">
+                            @note.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                        </time>
+
+                    <div class="note-actions">
+                        <a asp-controller="Notes"
+                           asp-action="Edit"
+                           asp-route-id="@note.Id"
+                           class="note-edit-button">
+                            Chỉnh sửa
+                        </a>
+
+                        <a asp-controller="Notes"
+                           asp-action="Share"
+                           asp-route-id="@note.Id"
+                           class="note-share-button">
+                            Chia sẻ
+                        </a>
+
+                        <a asp-controller="Notes"
+                           asp-action="SharedByMe"
+                           asp-route-noteId="@note.Id"
+                           class="note-share-button">
+                            Người nhận
+                        </a>
+
+                        <form asp-controller="Notes"
+                            asp-action="Delete"
+                            asp-route-id="@note.Id"
+                            method="post"
+                            onsubmit="return confirm('Bạn có chắc muốn xóa ghi chú này?');">
+                            <button type="submit"
+                                class="note-delete-button">
+                                Xóa
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>

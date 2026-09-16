@@ -1,0 +1,75 @@
+@model IEnumerable<AspNetMvcDemo.Models.SharedNoteViewModel>
+
+@{
+    ViewData["Title"] = "Ghi chú được chia sẻ";
+}
+
+<div class="notes-page">
+    <div class="notes-header">
+        <div>
+            <h1>Ghi chú được chia sẻ với tôi</h1>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="notes-empty">
+            <p>Chưa có ghi chú nào</p>
+        </div>
+    }
+    else
+    {
+        <div class="notes-list">
+            @foreach (var note in Model)
+            {
+                <article class="note-item">
+                    <div class="note-content">
+                        <h2>@note.Title</h2>
+                        <p>@note.Content</p>
+
+                        
+                    </div>
+
+                    <time class="note-time"
+                          datetime="@note.SharedAt.ToString("O")">
+                        @note.SharedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                    </time>
+
+                    <div class="note-actions">
+                        @if (note.CanEdit)
+                        {
+                            <a asp-controller="Notes"
+                               asp-action="Edit"
+                               asp-route-id="@note.Id"
+                               asp-route-fromShared="true"
+                               class="note-edit-button">
+                                Chỉnh sửa
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Notes"
+                               asp-action="Edit"
+                               asp-route-id="@note.Id"
+                               asp-route-fromShared="true"
+                               class="note-edit-button">
+                                Xem chi tiết
+                            </a>
+                        }
+
+                        <form asp-controller="Notes"
+                              asp-action="LeaveShare"
+                              asp-route-shareId="@note.ShareId"
+                              method="post"
+                              onsubmit="return confirm('Bạn không muốn nhận ghi chú này nữa?');">
+                            <button type="submit"
+                                    class="note-delete-button">
+                                Hủy nhận
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>

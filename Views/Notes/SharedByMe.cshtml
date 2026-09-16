@@ -1,0 +1,65 @@
+@model IEnumerable<AspNetMvcDemo.Models.NoteShareRecipientViewModel>
+
+@{
+    ViewData["Title"] = "Người được chia sẻ";
+}
+
+<div class="notes-page">
+    <div class="notes-header">
+        <div>
+            <h1>Người đang nhận ghi chú</h1>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="notes-empty">
+            <p>Ghi chú này chưa được chia sẻ cho ai.</p>
+        </div>
+    }
+    else
+    {
+        <div class="notes-list">
+            @foreach (var share in Model)
+            {
+                <article class="note-item">
+                    <div class="note-content">
+                        <h2>@share.RecipientUsername</h2>
+                        <p>@share.RecipientEmail</p>
+
+                        @if (share.CanEdit)
+                        {
+                            <span class="note-permission">
+                                Có quyền chỉnh sửa
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="note-permission">
+                                Chỉ được xem
+                            </span>
+                        }
+                    </div>
+
+                    <time class="note-time"
+                          datetime="@share.SharedAt.ToString("O")">
+                        @share.SharedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                    </time>
+
+                    <div class="note-actions">
+                        <form asp-controller="Notes"
+                              asp-action="RevokeShare"
+                              asp-route-shareId="@share.ShareId"
+                              method="post"
+                              onsubmit="return confirm('Hủy chia sẻ cho người này?');">
+                            <button type="submit"
+                                    class="note-delete-button">
+                                Hủy chia sẻ
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>
