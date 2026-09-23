@@ -10,62 +10,49 @@ USE it38web;
 GO
 
 
-    CREATE TABLE dbo.Users
-    (
-        Id INT IDENTITY(1,1) NOT NULL,
-        Username NVARCHAR(30) NOT NULL,
-        Email NVARCHAR(256) NOT NULL,
-        PasswordHash NVARCHAR(MAX) NOT NULL,
-        CreatedAt DATETIME2(7) NOT NULL
-            CONSTRAINT DF_Users_CreatedAt DEFAULT SYSUTCDATETIME(),
-
-        CONSTRAINT PK_Users PRIMARY KEY (Id),
-        CONSTRAINT UQ_Users_Username UNIQUE (Username),
-        CONSTRAINT UQ_Users_Email UNIQUE (Email)
-    );
+        CREATE TABLE it13webcsdl.dbo.Users (
+		Id int IDENTITY(1,1) NOT NULL,
+		Username nvarchar(250) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+		Email nvarchar(256) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+		PasswordHash nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+		CreatedAt datetime2 DEFAULT sysutcdatetime() NOT NULL,
+		CONSTRAINT PK_Users PRIMARY KEY (Id),
+		CONSTRAINT UQ_Users_Email UNIQUE (Email)
+	);
 GO
 
 
-    CREATE TABLE dbo.Notes
-    (
-        Id INT IDENTITY(1,1) NOT NULL,
-        Title NVARCHAR(200) NOT NULL,
-        Content NVARCHAR(MAX) NOT NULL,
-        CreatedAt DATETIME2(7) NOT NULL
-            CONSTRAINT DF_Notes_CreatedAt DEFAULT SYSUTCDATETIME(),
-        UpdatedAt DATETIME2(7) NULL,
-        UserId INT NOT NULL,
-
-        CONSTRAINT PK_Notes PRIMARY KEY (Id),
-        CONSTRAINT FK_Notes_Users
-            FOREIGN KEY (UserId)
-            REFERENCES dbo.Users(Id)
-            ON DELETE CASCADE
-    );
+    CREATE TABLE it13webcsdl.dbo.Notes (
+		Id int IDENTITY(1,1) NOT NULL,
+		Title nvarchar(200) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+		Content nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+		CreatedAt datetime2 DEFAULT sysutcdatetime() NOT NULL,
+		UpdatedAt datetime2 NULL,
+		UserId int NOT NULL,
+		CONSTRAINT PK_Notes PRIMARY KEY (Id)
+	);
+	
+	
+	
+	ALTER TABLE it13webcsdl.dbo.Notes ADD CONSTRAINT FK_Notes_Users FOREIGN KEY (UserId) REFERENCES it13webcsdl.dbo.Users(Id) ON DELETE CASCADE;
 GO
 
 
-    CREATE TABLE dbo.NoteShares
-    (
-        Id INT IDENTITY(1,1) NOT NULL,
-        NoteId INT NOT NULL,
-        UserId INT NOT NULL,
-        CanEdit BIT NOT NULL
-            CONSTRAINT DF_NoteShares_CanEdit DEFAULT 0,
-        SharedAt DATETIME2(7) NOT NULL
-            CONSTRAINT DF_NoteShares_SharedAt DEFAULT SYSUTCDATETIME(),
-
-        CONSTRAINT PK_NoteShares PRIMARY KEY (Id),
-        CONSTRAINT FK_NoteShares_Notes
-            FOREIGN KEY (NoteId)
-            REFERENCES dbo.Notes(Id)
-            ON DELETE CASCADE,
-        CONSTRAINT FK_NoteShares_Users
-            FOREIGN KEY (UserId)
-            REFERENCES dbo.Users(Id),
-        CONSTRAINT UQ_NoteShares_Note_User
-            UNIQUE (NoteId, UserId)
-    );
+    
+	CREATE TABLE it13webcsdl.dbo.NoteShares (
+		Id int IDENTITY(1,1) NOT NULL,
+		NoteId int NOT NULL,
+		UserId int NOT NULL,
+		CanEdit bit DEFAULT 0 NOT NULL,
+		SharedAt datetime2 DEFAULT sysutcdatetime() NOT NULL,
+		CONSTRAINT PK_NoteShares PRIMARY KEY (Id),
+		CONSTRAINT UQ_NoteShares_Note_User UNIQUE (NoteId,UserId)
+	);
+	
+	
+	
+	ALTER TABLE it13webcsdl.dbo.NoteShares ADD CONSTRAINT FK_NoteShares_Notes FOREIGN KEY (NoteId) REFERENCES it13webcsdl.dbo.Notes(Id) ON DELETE CASCADE;
+	ALTER TABLE it13webcsdl.dbo.NoteShares ADD CONSTRAINT FK_NoteShares_Users FOREIGN KEY (UserId) REFERENCES it13webcsdl.dbo.Users(Id);
 GO
         
 INSERT INTO it13webcsdl.dbo.Users (Username,Email,PasswordHash,CreatedAt) VALUES
